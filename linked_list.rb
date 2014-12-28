@@ -8,6 +8,11 @@ class Node
     @data = data
     @pointer = pointer
   end
+
+  def next_node
+    @pointer
+  end
+
 end
 
 
@@ -18,7 +23,6 @@ class IterativeLinkedList
   def initialize
     @head = nil
     @count = 0
-    @head_node = @head
     @collected = []
   end
 
@@ -36,15 +40,15 @@ class IterativeLinkedList
   end
 
   def insert(index, data)
-    @head = current
+    current = @head
+    @count = 0
     nextNode = current.pointer
     while current.pointer != nil
-      current = current.pointer
+      if @count == index
+        current.pointer = Node.new(data, nextNode.pointer)
+      end
       @count += 1
-    end
-    count += 1
-    if @count == index
-      current.pointer = Node.new(data, nextNode.pointer)
+      current = current.pointer
     end
   end
 
@@ -62,24 +66,22 @@ class IterativeLinkedList
   end
 
   def index(data)
-    @collected.index(data)
-  end
-
-
-  def next_node
     if @head.nil?
       nil
     else
       current = @head
-      while current.pointer != nil
-        next_node = current.pointer
+      @count = 0
+      while current.data != data
+        current = current.pointer
+        @count += 1
       end
-      nil
+      @count
     end
   end
 
   def push(data)
     current = @head
+    @head_node = @head
     if @head.nil?
       @head = Node.new(data, nil)
       @count = 1
@@ -94,7 +96,7 @@ class IterativeLinkedList
 
   def last_node
     current = @head
-    until current.pointer == nil
+    until current.pointer.nil?
       current = current.pointer
     end
     last_node = current
@@ -105,18 +107,20 @@ class IterativeLinkedList
       true
     else
       current = @head
-      until current.data == data
+      while current.pointer != nil
+        if current.data == data
+          true
+        else
+          false
+        end
         current = current.pointer
-        true
       end
       false
     end
   end
 
   def find(data)
-    if @head.data == data
-      @head
-    elsif @head.nil?
+    if @head.nil?
       nil
     else
       current = @head
