@@ -104,7 +104,6 @@ class IterativeLinkedList
     end
   end
 
-  # Encapsulation, abstraction, inheritance, polymorphism
   def push(data)
     node = Node.new(data)
     if @head.nil?
