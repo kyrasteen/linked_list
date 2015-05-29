@@ -1,4 +1,3 @@
-require 'pry'
 class Node
 
   attr_reader :data
@@ -29,14 +28,7 @@ class IterativeLinkedList
     elsif current.next_node.nil?
       count = 1
     else
-      count = 1
-      while current.next_node
-        count +=1
-        current = current.next_node
-        if current.next_node == nil
-          return count
-        end
-      end
+      count_till_final_node(current)
     end
   end
 
@@ -45,12 +37,7 @@ class IterativeLinkedList
     if @head.nil?
       collected
     else
-      current = @head
-      while current.next_node
-        collected << current.data
-        current = current.next_node
-      end
-      collected << current.data
+      shovel_nodes(collected)
     end
   end
 
@@ -60,12 +47,12 @@ class IterativeLinkedList
     if index == 0
       current = Node.new(data)
     end
-    while current.next_node
-      if index(current.next_node.data) == index
+    while next_node
+      if index(next_node.data) == index
         current.next_node = Node.new(data, next_node)
         break
       else
-      current = current.next_node
+        current = next_node
       end
     end
   end
@@ -74,26 +61,15 @@ class IterativeLinkedList
     if @head.nil?
       nil
     else
-      current = @head
-      next_node = current.next_node
-      until current.data == data
-        current = current.next_node
-      end
-      current.next_node = Node.new(to_insert, current.next_node)
+      find_index_to_insert_after(data, to_insert)
     end
   end
 
   def index(data)
-    i = 0
     if @head.nil?
       nil
     else
-      current = @head
-      while current.data != data
-        current = current.next_node
-        i += 1
-      end
-      i
+      find_index(data)
     end
   end
 
@@ -118,14 +94,7 @@ class IterativeLinkedList
     if @head.data == data
       true
     else
-      current = @head
-      while current.next_node
-        if current.data == data
-          true
-        end
-        current = current.next_node
-      end
-      false
+      found?(data)
     end
   end
 
@@ -150,12 +119,7 @@ class IterativeLinkedList
       @head = nil
       popped
     else
-      while current.next_node.next_node
-        current = current.next_node
-      end
-      popped = current.next_node.data
-      current.next_node = nil
-      popped
+      remove_final_node(current)
     end
   end
 
@@ -166,17 +130,86 @@ class IterativeLinkedList
     elsif current.data == data && current.next_node != nil
       @head = current.next_node
     else
-      while current.next_node
-        previous = current
-        current = current.next_node
-        if current.data == data && current.next_node == nil
-          previous.next_node = nil
-          return deleted = current
-        end
+      find_node_to_delete(current, data)
+    end
+  end
 
-        if current.data == data
-          previous.next_node = current.next_node
-        end
+  private
+
+  def is_last_node?(current)
+    current.next_node == nil
+  end
+
+  def count_till_final_node(current)
+    count = 1
+    while current.next_node
+      count +=1
+      current = current.next_node
+      if is_last_node?(current)
+        return count
+      end
+    end
+  end
+
+  def shovel_nodes(collected)
+    current = @head
+    while current.next_node
+      collected << current.data
+      current = current.next_node
+    end
+    collected << current.data
+  end
+
+  def find_index_to_insert_after(data, to_insert)
+    current = @head
+    next_node = current.next_node
+    until current.data == data
+      current = next_node
+    end
+    current.next_node = Node.new(to_insert, next_node)
+  end
+
+  def find_index(data)
+    i = 0
+    current = @head
+    while current.data != data
+      current = current.next_node
+      i += 1
+    end
+    i
+  end
+
+  def found?(data)
+    current = @head
+    while current.next_node
+      if current.data == data
+        true
+      end
+      current = current.next_node
+    end
+    false
+  end
+
+  def remove_final_node(current)
+    while current.next_node.next_node
+      current = current.next_node
+    end
+    popped = current.next_node.data
+    current.next_node = nil
+    popped
+  end
+
+  def find_node_to_delete(current,data)
+    while current.next_node
+      previous = current
+      current = current.next_node
+      if current.data == data && current.next_node == nil
+        previous.next_node = nil
+        return current
+      end
+
+      if current.data == data
+        previous.next_node = current.next_node
       end
     end
   end

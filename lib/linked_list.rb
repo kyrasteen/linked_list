@@ -171,3 +171,8 @@ class IterativeLinkedList
     end
   end
 end
+
+
+def linked_list
+  @linked_list
+end

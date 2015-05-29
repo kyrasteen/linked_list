@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './linked_list_refactor'
+require_relative './linked_list_refactor'
 
 class IterativeLinkedListTest < Minitest::Test
   attr_reader :list
