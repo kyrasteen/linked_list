@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './linked_list'
+require_relative './linked_list_refactor'
 
 class IterativeLinkedListTest < Minitest::Test
   attr_reader :list
@@ -147,12 +147,11 @@ class IterativeLinkedListTest < Minitest::Test
 
     list.insert(1, "pizza")
 
-    # assert_equal 1, list.index("pizza")
+    assert_equal 1, list.index("pizza")
     assert_equal ["hello", "pizza", "world", "today"], list.to_a
   end
 
   def test_inserted_node_is_next_node_for_previous_node
-    skip
     list.push("hello")
     list.push("world")
     list.push("today")
@@ -164,13 +163,12 @@ class IterativeLinkedListTest < Minitest::Test
   end
 
   def test_insert_after_adds_a_node_after_a_given_node
-    skip
     list.push("hello")
     list.push("world")
     list.push("today")
 
     list.insert_after("hello", "pizza")
-
+    list.index('hello')
     assert_equal "world", list.find("pizza").next_node.data
     assert_equal "pizza", list.find("hello").next_node.data
   end

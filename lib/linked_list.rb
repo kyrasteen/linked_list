@@ -41,28 +41,24 @@ class IterativeLinkedList
 
   def insert(index, data)
     current = @head
-    @count = 0
-    nextNode = current.pointer
-    while current.pointer != nil
-      if @count == index
-        current.pointer = Node.new(data, nextNode.pointer)
+    next_node = current.pointer
+    if index == 0
+      current = Node.new(data, next_node)
+    end
+    while current.pointer
+      if index(current.pointer.data) == index
+        current.pointer = Node.new(data, next_node)
+        break
+      else
+        current = current.pointer
       end
-      @count += 1
-      current = current.pointer
     end
   end
 
   def insert_after(data, to_insert)
-    if @head.nil?
-      nil
-    else
-      current = @head
-      nextNode = current.pointer
-      until current.data == data
-        current = current.pointer
-      end
-      current.pointer = Node.new(to_insert, nextNode.pointer)
-    end
+
+    insert(index(data), to_insert)
+
   end
 
   def index(data)
@@ -174,4 +170,9 @@ class IterativeLinkedList
     end
     end
   end
+end
+
+
+def linked_list
+  @linked_list
 end
